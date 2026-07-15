@@ -28,9 +28,9 @@ export const Auth: React.FC = () => {
         localStorage.setItem('@pokedex:token', data.token);
         localStorage.setItem('@pokedex:trainer', JSON.stringify(data.trainer));
         
-        // 🔀 REDIRECIONAMENTO INTELIGENTE (Treinador vs Modo Deus)
+      
         if (data.isAdmin) {
-          alert('Modo Deus Ativado! Bem-vindo ao Painel de Controle ⚡');
+          alert('Bem-vindo ao Painel de Controle!');
           navigate('/admin/pokemons'); 
         } else {
           alert('Bem-vindo, Treinador! 🎮');
@@ -46,12 +46,28 @@ export const Auth: React.FC = () => {
   };
 
   return (
-    <div className="auth-container">
-      <h2>{isLogin ? 'Login' : 'Cadastro'}</h2>
-      <form onSubmit={handleAuth}>
+    <div className="auth-container"
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
+      <h2
+      style={{
+        marginBottom: '20px',
+        color: '#de0909',
+      }}
+      >{isLogin ? 'Login' : 'Cadastro'}</h2>
+      <form onSubmit={handleAuth}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+      }}>
         {!isLogin && (
           <>
-            <input 
+            <input
               placeholder="Nome" 
               onChange={e => setFormData({...formData, name: e.target.value})} 
               required
@@ -77,7 +93,7 @@ export const Auth: React.FC = () => {
         />
         <button type="submit">{isLogin ? 'Entrar' : 'Cadastrar'}</button>
       </form>
-      <p onClick={() => setIsLogin(!isLogin)} style={{ cursor: 'pointer', color: '#38bdf8', marginTop: '15px' }}>
+      <p onClick={() => setIsLogin(!isLogin)} style={{ cursor: 'pointer', color: '#de0909', marginTop: '15px' }}>
         {isLogin ? 'Não tem conta? Cadastre-se' : 'Já tem conta? Faça Login'}
       </p>
     </div>

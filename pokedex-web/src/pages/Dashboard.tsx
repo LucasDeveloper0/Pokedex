@@ -75,7 +75,7 @@ export const Dashboard = () => {
         level: Number(level)
       })
 
-      alert("Pokémon capturado com sucesso! 🎒")
+      alert("Pokémon capturado com sucesso!")
       setSelectedPokemonId('')
       setNickname('')
       setLevel(1)
@@ -91,7 +91,7 @@ export const Dashboard = () => {
     try {
       const response = await api.patch(`/pokemons/${capturedId}/evoluir`, { level: 16 })
       if (response.status === 200 || response.status === 204) {
-        alert("Parabéns! Seu Pokémon evoluiu com sucesso! 🎉")
+        alert("Parabéns! Seu Pokémon evoluiu com sucesso!")
         fetchTeam() 
       }
     } catch (error: any) {
@@ -99,14 +99,14 @@ export const Dashboard = () => {
     }
   }
 
-  // NOVA FUNÇÃO: Deletar/Liberar Pokémon
+
   const handleRelease = async (capturedId: string) => {
     if (!confirm("Tem certeza que deseja soltar este Pokémon na natureza? 🍃")) return;
     
     try {
       await api.delete(`/pokemons/${capturedId}`)
       alert("Pokémon liberado com sucesso!")
-      fetchTeam() // Atualiza a lista
+      fetchTeam()
     } catch (error: any) {
       alert(`Erro ao liberar: ${error.response?.data?.error || 'Tente novamente.'}`)
     }
@@ -126,8 +126,8 @@ export const Dashboard = () => {
     <div className="min-h-screen bg-slate-950 text-slate-100 p-8">
       <header className="max-w-5xl mx-auto mb-12 border-l-4 border-blue-500 pl-4 flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight">
-            Pokédex <span className="text-blue-500">Management</span> Suite
+          <h1 className="text-4xl font-bold tracking-tight bg-red-600">
+            Pokédex 
           </h1>
           {trainerInfo && (
             <p className="text-slate-400 mt-2">
