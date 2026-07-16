@@ -1,87 +1,137 @@
-# 🦖 Pokédex Management Suite
+# 🎒 PokéDex Project (Monorepo)
 
-Uma aplicação Full Stack robusta desenvolvida para gerenciar o ecossistema Pokémon, dividida em uma experiência tática para Treinadores (Clientes) e um controle total via Painel Administrativo (Modo Deus).
-
----
-
-## 🚀 Funcionalidades Principais
-
-### 🎮 Área do Treinador
-* **Autenticação Completa:** Sistema de Login e Cadastro com validação de dados e persistência via Token JWT.
-* **Registro de Capturas:** Permite registrar novos Pokémons capturados definindo apelidos customizados e nível inicial.
-* **Evolução Dinâmica:** Sistema integrado que valida e evolui o Pokémon baseado em seu ID de evolução.
-* **Gerenciador de Elite (Times):** Criação e estruturação de times táticos com a trava clássica de **limite máximo de 6 slots** por grupo.
-* **Galeria de Insígnias:** Catálogo interativo onde o treinador pode visualizar e reivindicar insígnias oficiais para o seu perfil.
-
-### ⚡ Modo Deus (Painel Administrativo)
-* **Acesso Centralizado:** Conta mestra exclusiva configurada diretamente no fluxo de autenticação.
-* **Controle de Treinadores:** Tela administrativa para listar, editar dados cadastrais, banir/excluir treinadores e criar novas contas de clientes.
-* **Gestão de Espécies Globais:** Catálogo geral para cadastrar novos Pokémons na base de dados, além de editar ou excluir espécies existentes.
-* **Gerenciador de Insígnias:** Painel para criar, editar e remover insígnias do catálogo oficial do sistema.
+Este é um projeto Full Stack de uma PokéDex, composto por um front-end moderno em React (Vite) e uma API robusta de back-end em Node.js. O projeto foi projetado com controle de acesso para Treinadores e Administradores.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🚀 Arquitetura do Projeto
 
-### Frontend
-* **React.js** com **TypeScript**
-* **React Router Dom** (Gerenciamento de rotas protegidas e navegação fluida)
-* **Axios** (Integração com a API do Backend)
-* **Tailwind CSS** (Estilização moderna e interface em Dark Mode)
+O repositório está organizado como um monorepo:
 
-### Backend
-* **Node.js** com **TypeScript**
-* **Express** (Estruturação de rotas HTTP e Middlewares)
-* **Prisma ORM** (Modelagem de dados e integração com o Banco)
-* **JWT (JsonWebToken) & Bcrypt** (Segurança e criptografia de senhas)
+* **`pokedex-web/`**: Aplicação client-side desenvolvida com React, Vite, Tailwind CSS, React Router e implantada na **Vercel**.
+* **`pokedex-api/`**: Servidor/API REST desenvolvido em Node.js, Express, integrado a banco de dados e implantado no **Render**.
 
 ---
 
-## 📦 Como Executar o Projeto
+## 🎯 Casos de Uso (Use Cases)
 
-### 1. Pré-requisitos
-Certifique-se de ter o **Node.js** e um gerenciador de pacotes (npm, yarn ou pnpm) instalados em sua máquina.
+O sistema possui fluxos de trabalho distintos para três perfis de usuários: **Visitantes**, **Treinadores** e **Administradores**.
 
-### 2. Configurando o Backend
-1. Navegue até a pasta do servidor:
+### 1. Visitantes (Não Autenticados)
+* **UC01 - Cadastrar Treinador:** Um visitante pode criar uma nova conta de Treinador fornecendo e-mail, senha e nome.
+* **UC02 - Realizar Login:** O usuário pode se autenticar para acessar o painel correspondente ao seu nível de permissão (Treinador ou Administrador).
 
-    ```Bash
-   cd backend
-    
-2. Instale as dependências:
+### 2. Treinador (Autenticado)
+* **UC03 - Visualizar Pokédex:** Listar todos os Pokémons disponíveis no sistema com seus respectivos tipos e atributos.
+* **UC04 - Capturar Pokémon:** Adicionar um Pokémon à sua lista de capturados.
+* **UC05 - Meu Perfil:** Visualizar dados pessoais e a lista de Pokémons que ele capturou.
+* **UC06 - Liberar Pokémon:** Remover um Pokémon anteriormente capturado da sua lista pessoal.
 
-    ```Bash
-    npm install
-    
-Configure as suas variáveis de ambiente no arquivo .env (Database URL e JWT Secret).
+### 3. Administrador (Autenticado)
+* **UC07 - Painel Administrativo:** Acessar métricas gerais (total de treinadores, total de Pokémons cadastrados).
+* **UC08 - Gerenciar Pokémons (CRUD):** Criar novos Pokémons, editar atributos de Pokémons existentes ou deletar Pokémons do sistema.
+* **UC09 - Gerenciar Treinadores:** Visualizar todos os treinadores cadastrados e gerenciar suas permissões ou contas.
 
-Execute as migrations do Prisma para estruturar o banco de dados:
+---
 
-    ````Bash
-    npx prisma migrate dev
-Inicie o servidor de desenvolvimento:
+## 📊 Diagrama de Classes
 
-    ````Bash
-    npm run dev
-    
-3. Configurando o Frontend
-Navegue até a pasta do cliente:
+Abaixo está o modelo conceitual das classes e relacionamentos principais que governam o domínio da aplicação:
 
-    ````Bash
-   cd frontend
+```mermaid
+classDiagram
+    direction TB
+
+    class Usuario {
+        <<Abstract>>
+        +String id
+        +String nome
+        +String email
+        +String senha
+        +String tipoPerfil
+        +autenticar(email, senha) Boolean
+    }
+
+    class Treinador {
+        +List~Pokemon~ pokemonsCapturados
+        +capturarPokemon(pokemon: Pokemon) Void
+        +liberarPokemon(pokemonId: String) Void
+        +listarCapturados() List~Pokemon~
+    }
+
+    class Admin {
+        +cadastrarNovoPokemon(pokemon: Pokemon) Void
+        +atualizarPokemon(id: String, dados: Object) Void
+        +removerPokemon(id: String) Void
+        +removerTreinador(id: String) Void
+    }
+
+    class Pokemon {
+        +String id
+        +String nome
+        +String tipoPrincipal
+        +String tipoSecundario
+        +Int HP
+        +Int ataque
+        +Int defesa
+        +String urlImagem
+    }
+
+    class SessaoUsuario {
+        +String tokenJWT
+        +Date expiraEm
+        +Usuario usuarioAtivo
+        +validarSessao() Boolean
+    }
+
+    %% Relacionamentos
+    Usuario <|-- Treinador : Especializa
+    Usuario <|-- Admin : Especializa
+    Treinador "1" --> "*" Pokemon : possui/capturou
+    SessaoUsuario "1" --> "1" Usuario : autentica
+
+🛠️ Tecnologias Utilizadas
+Front-end: React, TypeScript, Vite, Tailwind CSS, Axios, React Router Dom.
+
+Back-end: Node.js, Express, CORS, JWT (JSON Web Tokens), BCrypt (criptografia de senhas).
+
+Hospedagem: Vercel (Front-end), Render (Back-end).
+
+🔧 Configuração e Instalação Local
+Requisitos Prévios
+Node.js (versão 18 ou superior)
+
+NPM ou Yarn
+
+Configurando o Back-end (pokedex-api)
+Entre na pasta:
+
+Bash
+cd pokedex-api
 Instale as dependências:
 
-    ````Bash
-    npm install
-Garanta que a URL da API no arquivo services/api.ts está apontando para a porta correta do seu backend.
+Bash
+npm install
+Crie um arquivo .env baseado no .env.example e preencha suas chaves.
 
-Inicie o app:
+Inicie o servidor em modo de desenvolvimento:
 
-    ````Bash
-    npm run dev
-    
-🔒 Conta Administrador Padrão
-Para acessar o painel administrativo, utilize as seguintes credenciais na tela de login:
+Bash
+npm run dev
+Configurando o Front-end (pokedex-web)
+Abra um novo terminal e entre na pasta:
 
-E-mail: admin@pokedex.com
-Senha: adminSuperSecreto123
+Bash
+cd pokedex-web
+Instale as dependências:
+
+Bash
+npm install
+Crie o seu arquivo .env local:
+
+Snippet de código
+VITE_API_URL=http://localhost:3000
+Inicie o projeto:
+
+Bash
+npm run dev
