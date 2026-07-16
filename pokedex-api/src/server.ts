@@ -8,7 +8,13 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = "SECRET_SUPER_SECRETO_PARA_SER_UM_CAMPEÃO";
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: 'https://pokedex-project-six-tawny.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 // Rota de teste
@@ -636,7 +642,7 @@ app.delete('/admin/pokemons/:id', async (req, res) => {
 });
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-}); 
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
