@@ -37,82 +37,193 @@ export const AdminTrainers = () => {
     }
   };
 
-  useEffect(() => { 
-    loadTrainers(); 
+  useEffect(() => {
+    loadTrainers();
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-8">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#e3e3e3',
+      border: '8px solid #ef4444',
+      color: '#000000',
+      padding: '2rem'
+    }}>
       {/* Cabeçalho de Navegação */}
-      <div className="max-w-4xl mx-auto flex justify-between mb-6">
-        <h1 className="text-2xl font-bold text-yellow-500">👑 Controle de Treinadores (Clientes)</h1>
-        <div className="flex gap-2">
+      <div style={{
+        maxWidth: '56rem',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: '1.5rem'
+      }}>
+        <h1 style={{
+          fontSize: '1.5rem',
+          lineHeight: '2rem',
+          fontWeight: '700',
+          color: '#eab308'
+        }}>👑 Controle de Treinadores (Clientes)</h1>
+        <div style={{
+          display: 'flex',
+          gap: '0.5rem'
+        }}>
           <button
             onClick={() => navigate('/admin/pokemons')}
-            className="bg-red-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-500 transition-all"
+            style={{
+              backgroundColor: '#7cdaf4',
+              color: '#000',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.75rem',
+              fontSize: '0.875rem',
+              lineHeight: '1.25rem',
+              fontWeight: 600,
+              transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer'
+            }}
           >
-            🦖 Ver Pokémons
+            Voltar ao Painel Principal
           </button>
 
           <button
             onClick={() => navigate('/admin/treinadores/novo')}
-            className="bg-yellow-600 text-slate-950 px-4 py-2 rounded-xl text-sm font-bold hover:bg-yellow-500 transition-all"
+            style={{
+              backgroundColor: '#92ec6b',
+              color: '#000',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.75rem',
+              fontSize: '0.875rem',
+              lineHeight: '1.25rem',
+              fontWeight: 600,
+              transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer'
+            }}
           >
             ➕ Novo Treinador
           </button>
 
           <button
             onClick={() => { localStorage.clear(); navigate('/'); }}
-            className="bg-slate-800 px-4 py-2 rounded-xl text-sm hover:bg-slate-700 transition-all"
+            style={{
+              backgroundColor: '#ef4444',
+              color: '#000',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.75rem',
+              fontSize: '0.875rem',
+              lineHeight: '1.25rem',
+              fontWeight: 600,
+              transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer'
+            }}
           >
             Sair do Painel
           </button>
         </div>
       </div>
 
-      {/* 🟢 TABELA ADICIONADA: Onde os dados da Sara e outros vão aparecer */}
-      <div className="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-xl p-4">
+
+      <div style={{
+        maxWidth: '56rem',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        backgroundColor: '#0f172a',
+        border: '1px solid #1e293b',
+        borderRadius: '1rem',
+        padding: '1rem'
+      }}>
         {trainers.length === 0 ? (
-          <p className="text-slate-400 text-sm text-center py-4">Nenhum treinador cadastrado no sistema.</p>
+          <p style={{
+            color: '#94a3b8',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            textAlign: 'center',
+            padding: '1rem'
+          }}>Nenhum treinador cadastrado no sistema.</p>
         ) : (
-          <table className="w-full text-left text-sm">
+          <table style={{
+            width: '100%',
+            textAlign: 'left',
+            fontSize: '0.875rem'
+          }}>
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400">
-                <th className="p-2">Nome</th>
-                <th className="p-2">E-mail</th>
-                <th className="p-2">Região</th>
-                <th className="p-2">Ações</th>
+              <tr style={{
+                borderBottom: '1px solid #1e293b',
+                color: '#94a3b8'
+              }}>
+                <th style={{ padding: '0.5rem' }}>Nome</th>
+                <th style={{ padding: '0.5rem' }}>E-mail</th>
+                <th style={{ padding: '0.5rem' }}>Região</th>
+                <th style={{ padding: '0.5rem' }}>Ações</th>
               </tr>
             </thead>
             <tbody>
               {trainers.map((t: any) => (
-                <tr key={t.id} className="border-b border-slate-800/50">
-                  <td className="p-2">
+                <tr key={t.id} style={{
+                  borderBottom: '1px solid #1e293b',
+                  color: '#fff'
+                }}>
+                  <td style={{ padding: '0.5rem' }}>
                     {editingId === t.id ? (
-                      <input 
-                        value={editForm.name} 
-                        onChange={e => setEditForm({...editForm, name: e.target.value})} 
-                        className="bg-slate-950 p-1 rounded border border-slate-700 text-slate-200 outline-none"
+                      <input
+                        value={editForm.name}
+                        onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                        style={{
+                          backgroundColor: '#020617',
+                          padding: '0.25rem',
+                          borderRadius: '0.25rem',
+                          border: '1px solid #334155',
+                          color: '#fff',
+                          outline: 'none'
+                        }}
                       />
                     ) : t.name}
                   </td>
-                  <td className="p-2 text-slate-400">{t.email}</td>
+                  <td style={{
+                    padding: '0.5rem',
+                    color: '#fff'
+                  }}>{t.email}</td>
                   <td className="p-2">
                     {editingId === t.id ? (
-                      <input 
-                        value={editForm.originRegion} 
-                        onChange={e => setEditForm({...editForm, originRegion: e.target.value})} 
-                        className="bg-slate-950 p-1 rounded border border-slate-700 text-slate-200 outline-none"
+                      <input
+                        value={editForm.originRegion}
+                        onChange={e => setEditForm({ ...editForm, originRegion: e.target.value })}
+                        style={{
+                          backgroundColor: '#020617',
+                          padding: '0.25rem',
+                          borderRadius: '0.25rem',
+                          border: '1px solid #334155',
+                          color: '#fff',
+                          outline: 'none'
+                        }}
                       />
                     ) : t.originRegion}
                   </td>
-                  <td className="p-2 flex gap-2">
+                  <td style={{
+                    padding: '0.5rem',
+                    display: 'flex',
+                    gap: '0.5rem'
+                  }}>
                     {editingId === t.id ? (
-                      <button onClick={() => handleSaveEdit(t.id)} className="text-green-400 hover:underline">Salvar</button>
+                      <button onClick={() => handleSaveEdit(t.id)} style={{
+                        color: '#fff', 
+                        cursor: 'pointer', 
+                        background: '#22c55e', 
+                        borderRadius: '0.5rem'
+                      }}>Salvar</button>
                     ) : (
-                      <button onClick={() => { setEditingId(t.id); setEditForm({ name: t.name, originRegion: t.originRegion }); }} className="text-blue-400 hover:underline">Editar</button>
+                      <button onClick={() => { setEditingId(t.id); setEditForm({ name: t.name, originRegion: t.originRegion }); }} style={{
+                        color: '#fff',
+                        cursor: 'pointer',
+                        background: '#3b82f6',
+                        borderRadius: '0.5rem'
+                      }}>Editar</button>
                     )}
-                    <button onClick={() => handleDelete(t.id)} className="text-red-400 hover:underline">Excluir</button>
+                    <button onClick={() => handleDelete(t.id)} style={{
+                      color: '#fff',
+                      cursor: 'pointer',
+                      background: '#ef4444',
+                      borderRadius: '0.5rem'
+                    }}>Excluir</button>
                   </td>
                 </tr>
               ))}

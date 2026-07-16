@@ -12,28 +12,151 @@ export const AdminNewTrainer = () => {
       // Reutiliza a rota padrão de criação de treinador do sistema
       await api.post('/treinadores', form);
       alert('Treinador (Cliente) cadastrado com sucesso!');
-      navigate('/admin/treinadores'); // <-- Ajustado para garantir o retorno correto
+      navigate('/admin/treinadores'); 
     } catch (err: any) {
       alert(err.response?.data?.error || 'Erro ao cadastrar.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-8 flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl w-full max-w-md flex flex-col gap-4">
-        <h2 className="text-xl font-bold text-yellow-500">👤 Cadastrar Treinador (Admin)</h2>
-        <input placeholder="Nome Completo" onChange={e => setForm({...form, name: e.target.value})} className="bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-sm" required/>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#e3e3e3',
+      border: '8px solid #ef4444', 
+      color: '#fff',
+      padding: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <form onSubmit={handleSubmit} style={{
+        backgroundColor: 'rgba(15, 23, 42, 0.4)',
+        border: '1px solid #334155',
+        padding: '1.5rem',
+        borderRadius: '1rem',
+        width: '100%',
+        maxWidth: '28rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
+        <h2 style={{
+          fontSize: '1.25rem',
+          fontWeight: '700',
+          color: '#000'
+        }}>👤 Cadastrar Treinador (Admin)</h2>
 
-        <input type="email" placeholder="E-mail de Acesso" onChange={e => setForm({...form, email: e.target.value})} className="bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-sm" required/>
+        {/* Nome Completo */}
+        <input 
+          placeholder="Nome Completo" 
+          value={form.name}
+          onChange={e => setForm({...form, name: e.target.value})} 
+          style={{
+            backgroundColor: '#020617',
+            border: '1px solid #1e293b',
+            padding: '0.625rem',
+            borderRadius: '0.75rem',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            color: '#fff'
+          }} 
+          required
+        />
 
-        <input type="password" placeholder="Senha Provisória" onChange={e => setForm({...form, password: e.target.value})} className="bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-sm" required/>
+        {/* E-mail de Acesso */}
+        <input 
+          type="email" 
+          placeholder="E-mail de Acesso" 
+          value={form.email}
+          onChange={e => setForm({...form, email: e.target.value})} 
+          style={{
+            backgroundColor: '#020617',
+            border: '1px solid #1e293b',
+            padding: '0.625rem',
+            borderRadius: '0.75rem',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            color: '#fff'
+          }} 
+          required
+        />
 
-        <input placeholder="Região Natal (Ex: Johto)" onChange={e => setForm({...form, originRegion: e.target.value})} className="bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-sm" required/>
+        {/* Senha Provisória */}
+        <input 
+          type="password" 
+          placeholder="Senha Provisória" 
+          value={form.password}
+          onChange={e => setForm({...form, password: e.target.value})} 
+          style={{
+            backgroundColor: '#020617',
+            border: '1px solid #1e293b',
+            padding: '0.625rem',
+            borderRadius: '0.75rem',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            color: '#fff'
+          }} 
+          required
+        />
 
-        <div className="flex gap-2 mt-2">
-          <button type="submit" className="bg-yellow-600 text-slate-950 w-full py-2.5 rounded-xl text-sm font-bold">Criar Conta</button>
+        {/* Região Natal */}
+        <input 
+          placeholder="Região Natal (Ex: Johto)" 
+          value={form.originRegion}
+          onChange={e => setForm({...form, originRegion: e.target.value})} 
+          style={{
+            backgroundColor: '#020617',
+            border: '1px solid #1e293b',
+            padding: '0.625rem',
+            borderRadius: '0.75rem',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            color: '#fff'
+          }} 
+          required
+        />
+
+        {/* Botões */}
+        <div style={{
+          display: 'flex',
+          gap: '0.5rem',
+          marginTop: '0.5rem'
+        }}>
+          <button type="submit" style={{
+            backgroundColor: '#5fe85d',
+            color: '#020617',
+            width: '100%',
+            paddingTop: '0.625rem',
+            paddingBottom: '0.625rem',
+            borderRadius: '0.75rem',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            fontWeight: '700',
+            cursor: 'pointer',
+            border: 'none',
+            transitionProperty: 'color, background-color, border-color, text-decoration-color, fill, stroke',
+            transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            transitionDuration: '150ms'
+          }}>
+            Criar Conta
+          </button>
           
-          <button type="button" onClick={() => navigate('/admin/treinadores')} className="bg-slate-800 w-full py-2.5 rounded-xl text-sm">
+          <button type="button" onClick={() => navigate('/admin/treinadores')} style={{
+            backgroundColor: '#ef4444',
+            color: '#fff',
+            width: '100%',
+            paddingTop: '0.625rem',
+            paddingBottom: '0.625rem',
+            borderRadius: '0.75rem',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            fontWeight: '700',
+            cursor: 'pointer',
+            border: 'none',
+            transitionProperty: 'color, background-color, border-color, text-decoration-color, fill, stroke',
+            transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            transitionDuration: '150ms'
+          }}>
             Cancelar
           </button>
         </div>

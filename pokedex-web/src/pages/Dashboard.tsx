@@ -126,11 +126,11 @@ export const Dashboard = () => {
     <div
       style={{
         minHeight: '100vh', 
-        backgroundColor: '#e3e3e3', 
         color: 'black', 
         padding: '20px', 
-        borderRadius: '8px', 
-        border: '8px solid #ef4444'
+        borderRadius: '8px',
+        backgroundColor: '#e3e3e3', 
+        border: '8px solid #ef4444',
       }}>
       <header
         style={{
