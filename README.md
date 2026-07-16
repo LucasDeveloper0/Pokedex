@@ -34,6 +34,54 @@ O sistema possui fluxos de trabalho distintos para três perfis de usuários: **
 
 ---
 
+🛠️ Tecnologias Utilizadas
+Front-end: React, TypeScript, Vite, Tailwind CSS, Axios, React Router Dom.
+
+Back-end: Node.js, Express, CORS, JWT (JSON Web Tokens), BCrypt (criptografia de senhas).
+
+Hospedagem: Vercel (Front-end), Render (Back-end).
+
+🔧 Configuração e Instalação Local
+Requisitos Prévios
+Node.js (versão 18 ou superior)
+
+NPM ou Yarn
+
+Configurando o Back-end (pokedex-api)
+Entre na pasta:
+
+Bash
+cd pokedex-api
+Instale as dependências:
+
+Bash
+npm install
+Crie um arquivo .env baseado no .env.example e preencha suas chaves.
+
+Inicie o servidor em modo de desenvolvimento:
+
+Bash
+npm run dev
+Configurando o Front-end (pokedex-web)
+Abra um novo terminal e entre na pasta:
+
+Bash
+cd pokedex-web
+Instale as dependências:
+
+Bash
+npm install
+Crie o seu arquivo .env local:
+
+Snippet de código
+VITE_API_URL=http://localhost:3000
+Inicie o projeto:
+
+Bash
+npm run dev
+
+---
+
 ## 📊 Diagrama de Classes
 
 Abaixo está o modelo conceitual das classes e relacionamentos principais que governam o domínio da aplicação:
@@ -89,49 +137,3 @@ classDiagram
     Usuario <|-- Admin : Especializa
     Treinador "1" --> "*" Pokemon : possui/capturou
     SessaoUsuario "1" --> "1" Usuario : autentica
-
-🛠️ Tecnologias Utilizadas
-Front-end: React, TypeScript, Vite, Tailwind CSS, Axios, React Router Dom.
-
-Back-end: Node.js, Express, CORS, JWT (JSON Web Tokens), BCrypt (criptografia de senhas).
-
-Hospedagem: Vercel (Front-end), Render (Back-end).
-
-🔧 Configuração e Instalação Local
-Requisitos Prévios
-Node.js (versão 18 ou superior)
-
-NPM ou Yarn
-
-Configurando o Back-end (pokedex-api)
-Entre na pasta:
-
-Bash
-cd pokedex-api
-Instale as dependências:
-
-Bash
-npm install
-Crie um arquivo .env baseado no .env.example e preencha suas chaves.
-
-Inicie o servidor em modo de desenvolvimento:
-
-Bash
-npm run dev
-Configurando o Front-end (pokedex-web)
-Abra um novo terminal e entre na pasta:
-
-Bash
-cd pokedex-web
-Instale as dependências:
-
-Bash
-npm install
-Crie o seu arquivo .env local:
-
-Snippet de código
-VITE_API_URL=http://localhost:3000
-Inicie o projeto:
-
-Bash
-npm run dev
