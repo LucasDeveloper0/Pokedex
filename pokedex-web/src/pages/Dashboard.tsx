@@ -40,9 +40,9 @@ export const Dashboard = () => {
       setLoading(true)
       const storedTrainer = localStorage.getItem('@pokedex:trainer');
       const trainerId = storedTrainer ? JSON.parse(storedTrainer).id : "";
-      
+
       const response = await api.get(`/treinadores/${trainerId}/time`)
-      setTrainerInfo(response.data) 
+      setTrainerInfo(response.data)
     } catch (error) {
       console.error("Erro ao buscar time:", error)
     } finally {
@@ -92,7 +92,7 @@ export const Dashboard = () => {
       const response = await api.patch(`/pokemons/${capturedId}/evoluir`, { level: 16 })
       if (response.status === 200 || response.status === 204) {
         alert("Parabéns! Seu Pokémon evoluiu com sucesso!")
-        fetchTeam() 
+        fetchTeam()
       }
     } catch (error: any) {
       alert(`Erro: ${error.response?.data?.error || 'Não foi possível evoluir'}`)
@@ -102,7 +102,7 @@ export const Dashboard = () => {
 
   const handleRelease = async (capturedId: string) => {
     if (!confirm("Tem certeza que deseja soltar este Pokémon na natureza? 🍃")) return;
-    
+
     try {
       await api.delete(`/pokemons/${capturedId}`)
       alert("Pokémon liberado com sucesso!")
@@ -123,162 +123,461 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-8">
-      <header className="max-w-5xl mx-auto mb-12 border-l-4 border-blue-500 pl-4 flex justify-between items-center">
+    <div
+      style={{
+        minHeight: '100vh', 
+        backgroundColor: '#e3e3e3', 
+        color: 'black', 
+        padding: '20px', 
+        borderRadius: '8px', 
+        border: '8px solid #ef4444'
+      }}>
+      <header
+        style={{
+          maxWidth: '100rem',
+          marginBottom: '3rem',
+          borderLeft: '4px solid #ef4444',
+          border: '2px solid black',
+          borderRadius: '8px',
+          paddingLeft: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
         <div>
-          <h1 className="text-4xl font-bold tracking-tight bg-red-600">
-            Pokédex 
+          <h1
+            style={{
+              fontSize: "60px",
+              lineHeight: '2.5rem',
+              fontWeight: 700,
+              letterSpacing: '-0.025em',
+            }}>
+            Pokédex
           </h1>
           {trainerInfo && (
-            <p className="text-slate-400 mt-2">
-              Treinador: <span className="text-slate-200 font-semibold">{trainerInfo.trainer}</span> | 
-              Região: <span className="text-slate-200 font-semibold"> {trainerInfo.region}</span>
+            <p
+              style={{
+                color: '#000000',
+                marginTop: '0.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+              }}>
+              <div>
+                Treinador: <span
+                  style={{
+                    color: '#444649',
+                    fontWeight: 600
+                  }}>{trainerInfo.trainer}</span>
+              </div>
+              <div>
+                Região: <span
+                  style={{
+                    color: '#444649',
+                    fontWeight: 600
+                  }}> {trainerInfo.region}</span>
+              </div>
             </p>
           )}
         </div>
-        
-        <div className="flex gap-3">
-            {/* 🏆 BOTÃO ADICIONADO PARA IR ÀS INSÍGNIAS */}
-            <button 
-                onClick={() => navigate('/badges')}
-                className="bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-            >
-                🏆 Minhas Insígnias
-            </button>
 
-            <button 
-                onClick={() => navigate('/teams')}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-            >
-                🛡️ Gerenciar Times
-            </button>
-            
-            <button 
-                onClick={handleLogout}
-                className="bg-slate-900 border border-slate-800 hover:border-red-500/50 text-slate-400 hover:text-red-400 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-            >
-                Sair da Conta
-            </button>
-            </div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}>
+          <button
+            onClick={() => navigate('/badges')}
+            style={{
+              backgroundColor: '#e9d354',
+              color: '#000',
+              marginRight: '0.5rem',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.75rem',
+              fontSize: '0.875rem',
+              lineHeight: '1.25rem',
+              fontWeight: 600,
+              transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer'
+            }}>
+            Minhas Insígnias
+          </button>
+
+          <button
+            onClick={() => navigate('/teams')}
+            style={{
+              backgroundColor: '#7cdaf4',
+              color: '#000',
+              marginRight: '0.5rem',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.75rem',
+              fontSize: '0.875rem',
+              lineHeight: '1.25rem',
+              fontWeight: 600,
+              transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer'
+            }}>
+            Gerenciar Times
+          </button>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              backgroundColor: '#ef4444',
+              color: '#000',
+              marginRight: '0.5rem',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.75rem',
+              fontSize: '0.875rem',
+              lineHeight: '1.25rem',
+              fontWeight: 600,
+              transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+              cursor: 'pointer'
+            }}>
+            Sair da Conta
+          </button>
+        </div>
       </header>
 
-      <main className="max-w-5xl mx-auto">
-        <section className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 mb-12 backdrop-blur-sm">
-          <h2 className="text-xl font-semibold mb-4 text-blue-400 flex items-center gap-2">
-            🎒 Registrar Nova Captura
+      <main style={{
+        maxWidth: '90rem',
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }}>
+        <section style={{
+          backgroundColor: 'rgba(15, 23, 42, 0.4)',
+          border: '1px solid #1e293b',
+          borderRadius: '1rem',
+          padding: '1.5rem',
+          marginBottom: '3rem',
+          backdropFilter: 'blur(4px)',
+          WebkitBackdropFilter: 'blur(4px)'
+        }}>
+          <h2 style={{
+            fontSize: '1.25rem',
+            lineHeight: '1.75rem',
+            fontWeight: 600,
+            marginBottom: '1rem',
+            color: 'black',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}>
+            Registrar Nova Captura
           </h2>
-          <form onSubmit={handleCapture} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-            <div className="flex flex-col gap-2">
-              <label className="text-xs text-slate-400 font-bold">ESPÉCIE</label>
-              <select
-                value={selectedPokemonId}
-                onChange={e => setSelectedPokemonId(e.target.value)}
-                className="bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-200 focus:border-blue-500 outline-none"
-                required
-              >
-                <option value="">Selecione o Pokémon...</option>
-                {availablePokemons.map(p => (
-                  <option key={p.id} value={p.id}>
-                    #{String(p.pokedexNum).padStart(3, '0')} - {p.name} ({p.type1})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-xs text-slate-400 font-bold">APELIDO (OPCIONAL)</label>
-              <input
-                type="text"
-                placeholder="Ex: Sparky"
-                value={nickname}
-                onChange={e => setNickname(e.target.value)}
-                className="bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-200 focus:border-blue-500 outline-none"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-xs text-slate-400 font-bold">NÍVEL INICIAL</label>
-              <input
-                type="number"
-                min="1"
-                max="100"
-                value={level}
-                onChange={e => setLevel(Number(e.target.value))}
-                className="bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-200 focus:border-blue-500 outline-none"
-                required
-              />
+          <form onSubmit={handleCapture}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              gap: '1rem',
+              alignItems: 'flex-end',
+              paddingBottom: '1rem',
+            }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem'
+              }}>
+                <label style={{
+                  fontSize: '0.95rem',
+                  lineHeight: '1rem',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  marginLeft: '10px'
+                }}>Espécie</label>
+                <select
+                  value={selectedPokemonId}
+                  onChange={e => setSelectedPokemonId(e.target.value)}
+                  style={{
+                    backgroundColor: '#020617',
+                    border: '1px solid #1e293b',
+                    borderRadius: '0.75rem',
+                    padding: '0.625rem',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.25rem',
+                    color: '#e2e8f0',
+                    outline: 'none'
+                  }}
+                  required
+                >
+                  <option value="">Selecione o Pokémon...</option>
+                  {availablePokemons.map(p => (
+                    <option key={p.id} value={p.id}>
+                      #{String(p.pokedexNum).padStart(3, '0')} - {p.name} ({p.type1})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem'
+              }}>
+                <label style={{
+                  fontSize: '0.95rem',
+                  lineHeight: '1rem',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  marginLeft: '10px'
+                }}>Apelido (Opcional)</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Sparky"
+                  value={nickname}
+                  onChange={e => setNickname(e.target.value)}
+                  style={{
+                    backgroundColor: '#020617',
+                    border: '1px solid #1e293b',
+                    borderRadius: '0.75rem',
+                    padding: '0.625rem',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.25rem',
+                    color: '#e2e8f0',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem'
+              }}>
+                <label style={{
+                  fontSize: '0.95rem',
+                  lineHeight: '1rem',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  marginLeft: '10px'
+                }}>Nivel inicial</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={level}
+                  onChange={e => setLevel(Number(e.target.value))}
+                  style={{
+                    backgroundColor: '#020617',
+                    border: '1px solid #1e293b',
+                    borderRadius: '0.75rem',
+                    padding: '0.625rem',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.25rem',
+                    color: '#e2e8f0',
+                    outline: 'none'
+                  }}
+                  required
+                />
+              </div>
             </div>
 
             <button
               type="submit"
               disabled={isCapturing}
-              className="bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl font-semibold text-sm transition-all disabled:bg-slate-800 disabled:text-slate-500"
+              style={{
+                backgroundColor: '#ef4444',
+                color: '#ffffff',
+                width: '60%',
+                paddingTop: '0.625rem',
+                paddingBottom: '0.625rem',
+                borderRadius: '0.75rem',
+                fontWeight: 600,
+                fontSize: '0.875rem',
+                lineHeight: '1.25rem',
+                transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+                border: 'none',
+                cursor: 'pointer'
+              }}
             >
-              {isCapturing ? 'Capturando...' : 'Lançar Pokébola 🔴'}
+              {isCapturing ? 'Capturando...' : 'Lançar Pokébola!'}
             </button>
           </form>
         </section>
 
-        <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-          Time Atual
+        <h2 style={{
+          fontSize: '1.5rem',
+          lineHeight: '2rem',
+          fontWeight: 600,
+          marginBottom: '1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          <span style={{
+            width: '0.5rem',
+            height: '0.5rem',
+            borderRadius: '9999px',
+            backgroundColor: '#f43f5e'
+          }}></span>
+          Pokémons Capturados
         </h2>
 
         {loading ? (
-          <p className="text-slate-400">Carregando Pokémons do banco...</p>
+          <p style={{
+            color: '#94a3b8'
+          }}>Carregando Pokémons do banco...</p>
         ) : !trainerInfo || trainerInfo.team.length === 0 ? (
-          <p className="text-slate-500 italic">Nenhum Pokémon capturado no time.</p>
+          <p style={{
+            color: '#64748b',
+            fontStyle: 'italic'
+          }}>Nenhum Pokémon capturado no time.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: '1.5rem'
+          }}>
             {trainerInfo.team.map((captured) => (
-              <div 
-                key={captured.id} 
-                className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-sm shadow-xl flex flex-col justify-between"
+              <div
+                key={captured.id}
+                style={{
+                  backgroundColor: 'rgba(15, 23, 42, 0.4)',
+                  border: '1px solid #1e293b',
+                  borderRadius: '1rem',
+                  padding: '10%   ',
+                  backdropFilter: 'blur(4px)',
+                  WebkitBackdropFilter: 'blur(4px)',
+                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}
               >
                 <div>
-                  <div className="flex justify-between items-start mb-4">
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    marginBottom: '1rem'
+                  }}>
                     <div>
-                      <span className="text-xs text-slate-500 font-mono">#{String(captured.pokemon.pokedexNum).padStart(3, '0')}</span>
-                      <h3 className="text-xl font-bold">{captured.nickname || captured.pokemon.name}</h3>
-                      <p className="text-xs text-slate-400 italic">Espécie: {captured.pokemon.name}</p>
+                      <span style={{
+                        fontSize: '0.75rem',
+                        lineHeight: '1rem',
+                        color: '#000',
+                        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+                      }}>
+                        #{String(captured.pokemon.pokedexNum).padStart(3, '0')}</span>
+                      <h3 style={{
+                        fontSize: '1.25rem',
+                        lineHeight: '1.75rem',
+                        fontWeight: 700
+                      }}>
+                        {captured.nickname || captured.pokemon.name}</h3>
+                      <p style={{
+                        fontSize: '1rem',
+                        lineHeight: '1rem',
+                        color: '#000',
+                        fontStyle: 'italic'
+                      }}>Espécie: {captured.pokemon.name}</p>
                     </div>
-                    <span className="bg-slate-800 text-blue-400 px-3 py-1 rounded-full text-xs font-bold">
+                    <span style={{
+                      backgroundColor: '#ef4444',
+                      color: '#fff',
+                      paddingLeft: '0.75rem',
+                      paddingRight: '0.75rem',
+                      paddingTop: '0.25rem',
+                      paddingBottom: '0.25rem',
+                      borderRadius: '9999px',
+                      fontSize: '0.75rem',
+                      lineHeight: '1rem',
+                      fontWeight: 700
+                    }}>
                       Nv. {captured.level}
                     </span>
                   </div>
 
-                  <div className="flex gap-2 mb-6">
-                    <span className="bg-blue-950/40 text-blue-400 border border-blue-900/50 px-2 py-0.5 rounded text-xs uppercase font-medium">
+                  <div style={{
+                    display: 'flex',
+                    marginBottom: '1.5rem'
+                  }}>
+                    <span style={{
+                      backgroundColor: 'rgba(23, 37, 84, 0.4)',
+                      color: '#fff',
+                      border: '1px solid rgba(30, 58, 138, 0.5)',
+                      paddingLeft: '0.5rem',
+                      paddingRight: '0.5rem',
+                      paddingTop: '0.125rem',
+                      paddingBottom: '0.125rem',
+                      borderRadius: '0.25rem',
+                      fontSize: '0.75rem',
+                      lineHeight: '1rem',
+                      textTransform: 'uppercase',
+                      fontWeight: 500
+                    }}>
                       {captured.pokemon.type1}
                     </span>
                     {captured.pokemon.type2 && (
-                      <span className="bg-purple-950/40 text-purple-400 border border-purple-900/50 px-2 py-0.5 rounded text-xs uppercase font-medium">
+                      <span style={{
+                        backgroundColor: 'rgba(59, 7, 100, 0.4)',
+                        color: '#fff',
+                        border: '1px solid rgba(76, 29, 149, 0.5)',
+                        paddingLeft: '0.5rem',
+                        paddingRight: '0.5rem',
+                        paddingTop: '0.125rem',
+                        paddingBottom: '0.125rem',
+                        borderRadius: '0.25rem',
+                        fontSize: '0.75rem',
+                        lineHeight: '1rem',
+                        textTransform: 'uppercase',
+                        fontWeight: 500
+                      }}>
                         {captured.pokemon.type2}
                       </span>
                     )}
                   </div>
                 </div>
 
-                {/* BOTÕES DE AÇÃO: Agrupados em coluna */}
-                <div className="flex flex-col gap-2 mt-4">
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                  marginTop: '1rem'
+                }}>
                   <button
                     onClick={() => handleEvolve(captured.id)}
                     disabled={!captured.pokemon.evolvesToId}
-                    className={`w-full py-2 rounded-xl font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-2 ${
-                      captured.pokemon.evolvesToId
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 shadow-md shadow-blue-500/20 active:scale-[0.98]'
-                        : 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                    }`}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem 0',
+                      borderRadius: '0.75rem',
+                      fontWeight: 600,
+                      fontSize: '0.75rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      background: captured.pokemon.evolvesToId
+                        ? 'linear-gradient(to right, #2563eb, #3b82f6)'
+                        : '#1e293b',
+                      color: captured.pokemon.evolvesToId ? '#ffffff' : '#64748b',
+                      cursor: captured.pokemon.evolvesToId ? 'pointer' : 'not-allowed',
+                      border: 'none'
+                    }}
                   >
-                    {captured.pokemon.evolvesToId ? '⚡ Evoluir Pokémon' : '✨ Evolução Máxima'}
+                    {captured.pokemon.evolvesToId ? ' Evoluir Pokémon!' : ' Ultima evolução atingida!'}
                   </button>
 
-                  {/* BOTÃO NOVO: Deletar/Liberar */}
+
                   <button
                     onClick={() => handleRelease(captured.id)}
-                    className="w-full py-2 bg-slate-900 border border-slate-800 hover:border-red-500/40 text-slate-400 hover:text-red-400 rounded-xl font-semibold text-xs transition-all"
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem 0',
+                      backgroundColor: '#21d454', 
+                      border: '1px solid #1e293b', 
+                      color: '#000', 
+                      borderRadius: '0.75rem', 
+                      fontWeight: 600,
+                      fontSize: '0.75rem',
+                      transition: 'all 300ms ease'
+                    }}
                   >
-                    🍃 Soltar na Natureza
+                    Soltar na Natureza
                   </button>
                 </div>
 

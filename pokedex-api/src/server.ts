@@ -193,16 +193,44 @@ app.delete('/global-badges/:id', async (req, res) => {
 // --- CONQUISTA DE INSÍGNIAS (Treinador) ---
 
 app.post('/treinadores/badges', async (req, res) => {
-  const { trainerId, name, gym } = req.body;
+  // Recebemos o badgeId (ID da GlobalBadge) vindo do frontend
+  const { trainerId, badgeId, name, gym } = req.body;
   
-  // Verifica se o treinador já tem essa insígnia (pelo nome)
-  const exists = await prisma.badge.findFirst({ where: { trainerId, name } });
-  if (exists) return res.status(400).json({ error: "Você já possui esta insígnia!" });
+  try {
+    // 1. Verifica se o treinador já tem essa insígnia (pelo nome)
+    const exists = await prisma.badge.findFirst({ where: { trainerId, name } });
+    if (exists) return res.status(400).json({ error: "Você já possui esta insígnia!" });
 
-  const newBadge = await prisma.badge.create({
-    data: { trainerId, name, gym }
-  });
-  return res.status(201).json(newBadge);
+    // 2. Cria a Badge forçando o "id" a ser idêntico ao "badgeId" (FK da GlobalBadge)
+    const newBadge = await prisma.badge.create({
+      data: {
+        id: badgeId, // <-- CRUCIAL: O id da Badge DEVE ser o mesmo id da GlobalBadge
+        name,
+        gym,
+        trainerId // Conecta o treinador diretamente pelo ID
+      }
+    });
+
+    return res.status(201).json(newBadge);
+  } catch (error) {
+    console.error("Erro detalhado no Prisma:", error);
+    return res.status(500).json({ error: "Erro interno no servidor ao salvar a insígnia." });
+  }
+});
+
+app.get('/treinadores/:id/badges', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const badges = await prisma.badge.findMany({
+      where: {
+        trainerId: id
+      }
+    });
+    return res.json(badges);
+  } catch (error) {
+    console.error("Erro ao buscar badges direto:", error);
+    return res.status(500).json({ error: "Erro ao carregar insígnias do treinador." });
+  }
 });
 
 

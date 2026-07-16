@@ -27,13 +27,13 @@ interface Team {
 
 export const Teams = () => {
   const navigate = useNavigate()
-  
-  // Dados vindos do Banco
+
+
   const [capturedPokemons, setCapturedPokemons] = useState<CapturedPokemon[]>([])
   const [trainerTeams, setTrainerTeams] = useState<Team[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Estados dos Formulários
+
   const [newTeamName, setNewTeamName] = useState('')
   const [selectedTeamId, setSelectedTeamId] = useState('')
 
@@ -42,23 +42,23 @@ export const Teams = () => {
     return storedTrainer ? JSON.parse(storedTrainer).id : ""
   }
 
-  // Carrega os Pokémons Capturados e os Times existentes
+
   const loadData = async () => {
     const trainerId = getTrainerId()
     if (!trainerId) return
 
     try {
       setLoading(true)
-      
-      // 1. Puxa todos os capturados para saber quem está disponível para escalar
+
+
       const teamResponse = await api.get(`/treinadores/${trainerId}/time`)
       setCapturedPokemons(teamResponse.data.team)
 
-      // 2. Puxa os times já criados pelo treinador
+
       const teamsResponse = await api.get(`/treinadores/${trainerId}/teams`)
       setTrainerTeams(teamsResponse.data)
-      
-      // Deixa o primeiro time selecionado por padrão se houver algum
+
+
       if (teamsResponse.data.length > 0 && !selectedTeamId) {
         setSelectedTeamId(teamsResponse.data[0].id)
       }
@@ -69,7 +69,7 @@ export const Teams = () => {
     }
   }
 
-  // Cria uma nova estrutura de time (Ex: "Time de Kanto")
+
   const handleCreateTeam = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newTeamName.trim()) return
@@ -79,8 +79,8 @@ export const Teams = () => {
         name: newTeamName,
         trainerId: getTrainerId()
       })
-      
-      alert("Time estruturado com sucesso! Agora escale os membros. 🛡️")
+
+      alert("Time estruturado com sucesso! Agora escale os membros.")
       setNewTeamName('')
       loadData()
     } catch (error: any) {
@@ -88,7 +88,7 @@ export const Teams = () => {
     }
   }
 
-  // Adiciona o Pokémon capturado selecionado ao time ativo
+
   const handleAddMember = async (capturedId: string) => {
     if (!selectedTeamId) {
       return alert("Por favor, crie ou selecione um time primeiro!")
@@ -101,7 +101,7 @@ export const Teams = () => {
       })
 
       alert("Pokémon escalado para o grupo! ⚔️")
-      loadData() // Recarrega para exibir o slot preenchido e validar a trava de 6 elementos
+      loadData()
     } catch (error: any) {
       alert(`Não foi possível escalar: ${error.response?.data?.error || 'Erro desconhecido.'}`)
     }
@@ -111,56 +111,160 @@ export const Teams = () => {
     loadData()
   }, [selectedTeamId])
 
-  // Localiza qual é o time selecionado na lista para renderizar os 6 slots ativos
+
   const activeTeam = trainerTeams.find(t => t.id === selectedTeamId)
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-8">
-      <header className="max-w-5xl mx-auto mb-12 border-l-4 border-emerald-500 pl-4 flex justify-between items-center">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#e3e3e3',
+      color: 'black',
+      padding: '20px',
+      borderRadius: '8px',
+      border: '8px solid #ef4444'
+    }}>
+      <header style={{
+        maxWidth: '100rem',
+        marginBottom: '3rem',
+        borderLeft: '4px solid #ef4444',
+        border: '2px solid black',
+        borderRadius: '8px',
+        paddingLeft: '1rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
         <div>
-          <h1 className="text-4xl font-bold tracking-tight">
-            Gerenciador de <span className="text-emerald-500">Elite</span>
+          <h1 style={{
+            fontSize: "40px",
+            lineHeight: '2.5rem',
+            fontWeight: 700,
+            letterSpacing: '-0.025em',
+          }}>
+            Gerenciador de Times
           </h1>
-          <p className="text-slate-400 mt-2">Monte sua composição tática limitando-se a até 6 combatentes.</p>
+          <p style={{
+            color: '#585c60',
+            marginTop: '0.5rem'
+          }}>Monte seu time com 6 Pokémons!</p>
         </div>
-        <button 
+        <button
           onClick={() => navigate('/dashboard')}
-          className="bg-slate-900 border border-slate-800 hover:border-blue-500/50 text-slate-400 hover:text-blue-400 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
+          style={{
+            backgroundColor: '#74acff',
+            color: '#000',
+            marginRight: '0.5rem',
+            padding: '0.5rem 1rem',
+            borderRadius: '0.75rem',
+            fontSize: '0.875rem',
+            lineHeight: '1.25rem',
+            fontWeight: 600,
+            transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+            cursor: 'pointer'
+          }}
         >
-          ⬅️ Voltar ao Dashboard
+          Voltar ao Dashboard
         </button>
       </header>
 
-      <main className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* COLUNA ESQUERDA: Criação de Times e Seleção */}
-        <div className="flex flex-col gap-6 lg:col-span-1">
-          <section className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
-            <h2 className="text-lg font-bold mb-4 text-emerald-400">🛡️ Novo Elenco</h2>
-            <form onSubmit={handleCreateTeam} className="flex flex-col gap-3">
-              <input 
+      <main style={{
+        maxWidth: '90rem',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gridColumn: 'span 1 / span 1',
+          gap: '1rem'
+        }}>
+          <section style={{
+            backgroundColor: 'rgba(15, 23, 42, 0.4)',
+            border: '1px solid #1e293b',
+            borderRadius: '1rem',
+            padding: '1rem'
+          }}>
+            <h2 style={{
+              lineHeight: '1.75rem',
+              fontWeight: 700,
+              color: '#000'
+            }}> Novo time</h2>
+            <form onSubmit={handleCreateTeam} style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem'
+            }}>
+              <input
                 type="text"
                 placeholder="Ex: Time de Elite do Lucas"
                 value={newTeamName}
                 onChange={e => setNewTeamName(e.target.value)}
-                className="bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm outline-none focus:border-emerald-500"
+                style={{
+                  backgroundColor: '#020617',
+                  color: '#fff',
+                  border: '1px solid #1e293b',
+                  borderRadius: '0.75rem',
+                  padding: '0.625rem',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.25rem',
+                  outline: 'none'
+                }}
                 required
               />
-              <button type="submit" className="bg-emerald-600 hover:bg-emerald-500 py-2 rounded-xl font-semibold text-sm transition-all">
+              <button type="submit" style={{
+                backgroundColor: '#16bf8a',
+                paddingTop: '0.5rem',
+                paddingBottom: '0.5rem',
+                borderRadius: '0.75rem',
+                fontWeight: 600,
+                fontSize: '0.875rem',
+                lineHeight: '1.25rem',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+              }}>
                 Criar Estrutura
               </button>
             </form>
           </section>
 
-          <section className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
-            <h2 className="text-lg font-bold mb-3 text-emerald-400">📂 Selecionar Grupo</h2>
+          <section style={{
+            backgroundColor: 'rgba(15, 23, 42, 0.4)',
+            border: '1px solid #1e293b',
+            borderRadius: '1rem',
+            padding: '1.5rem'
+          }}>
+            <h2 style={{
+              fontSize: '1.125rem',
+              lineHeight: '1.75rem',
+              fontWeight: 700,
+              marginBottom: '0.75rem',
+              color: '#000'
+            }}> Selecionar Grupo</h2>
             {trainerTeams.length === 0 ? (
-              <p className="text-xs text-slate-500 italic">Nenhum time estruturado ainda.</p>
+              <p style={{
+                fontSize: '0.95rem',
+                lineHeight: '1rem',
+                color: '#cfd4dd',
+                fontStyle: 'italic'
+              }}>Nenhum time estruturado ainda.</p>
             ) : (
               <select
                 value={selectedTeamId}
                 onChange={e => setSelectedTeamId(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-200 focus:border-emerald-500 outline-none"
+                style={{
+                  width: '100%',
+                  backgroundColor: '#020617',
+                  border: '1px solid #1e293b',
+                  borderRadius: '0.75rem',
+                  padding: '0.625rem',
+                  fontSize: '0.875rem',
+                  lineHeight: '1.25rem',
+                  color: '#e2e8f0',
+                  outline: 'none'
+                }}
               >
                 {trainerTeams.map(t => (
                   <option key={t.id} value={t.id}>{t.name} ({t.members.length}/6)</option>
@@ -170,32 +274,89 @@ export const Teams = () => {
           </section>
         </div>
 
-        {/* COLUNA CENTRAL/DIREITA: Visualização dos 6 Slots e Pokémons Disponíveis */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
-          {/* SLOTS ATIVOS */}
-          <section className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              ⭐ {activeTeam ? activeTeam.name : 'Selecione um Time'} 
-              <span className="text-xs font-normal text-slate-500 font-mono">
+        <div style={{
+          gridColumn: 'span 2 / span 2',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem'
+        }}>
+          <section style={{
+            backgroundColor: 'rgba(15, 23, 42, 0.4)',
+            border: '1px solid #1e293b',
+            borderRadius: '1rem',
+            padding: '1.5rem'
+          }}>
+            <h2 style={{
+              fontSize: '1.25rem',
+              lineHeight: '1.75rem',
+              fontWeight: 700,
+              marginBottom: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              {activeTeam ? activeTeam.name : 'Selecione um Time'}
+              <span style={{
+                fontSize: '0.75rem',
+                lineHeight: '1rem',
+                fontWeight: 400,
+                color: '#c9cacb',
+                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+              }}>
                 ({activeTeam ? activeTeam.members.length : 0}/6 slots ocupados)
               </span>
             </h2>
 
             {loading ? (
-              <p className="text-sm text-slate-400">Carregando escalações...</p>
+              <p style={{
+                fontSize: '0.875rem',
+                lineHeight: '1.25rem',
+                color: '#94a3b8'
+              }}>Carregando escalações...</p>
             ) : !activeTeam || activeTeam.members.length === 0 ? (
-              <p className="text-sm text-slate-500 italic p-4 border border-dashed border-slate-800 rounded-xl text-center">
+              <p style={{
+                fontSize: '0.875rem',
+                lineHeight: '1.25rem',
+                color: '#bdc3cc',
+                fontStyle: 'italic',
+                padding: '1rem',
+                border: '1px dashed #1e293b',
+                borderRadius: '0.75rem',
+                textAlign: 'center'
+              }}>
                 Nenhum Pokémon convocado para este grupo de batalha ainda. Use a lista abaixo para convocá-los.
               </p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                gap: '1rem',
+              }}>
                 {activeTeam.members.map(m => (
-                  <div key={m.id} className="bg-slate-950/60 border border-emerald-900/30 p-4 rounded-xl flex justify-between items-center">
+                  <div key={m.id} style={{
+                    backgroundColor: 'rgba(15, 23, 42, 0.4)',
+                    border: '1px solid rgba(6, 78, 59, 0.3)',
+                    padding: '1rem',
+                    borderRadius: '0.75rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
                     <div>
-                      <h4 className="font-bold text-sm text-emerald-400">{m.captured.nickname || m.captured.pokemon.name}</h4>
-                      <p className="text-xs text-slate-400 font-mono">Espécie: {m.captured.pokemon.name} | Nv. {m.captured.level}</p>
+                      <h4 style={{
+                        fontWeight: 700,
+                        fontSize: '0.875rem',
+                        lineHeight: '1.25rem',
+                        color: '#ffffff'
+                      }}>{m.captured.nickname || m.captured.pokemon.name}</h4>
+                      <p style={{
+                        fontSize: '0.75rem',
+                        lineHeight: '1rem',
+                        color: '#94a3b8',
+                        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+                      }}><div style={{ color: '#cfd1d4' }}>Espécie: {m.captured.pokemon.name}</div> Nv. {m.captured.level}</p>
                     </div>
-                    <span className="text-xs bg-slate-900 text-slate-500 px-2 py-1 rounded">Membro</span>
+
                   </div>
                 ))}
               </div>
@@ -203,23 +364,82 @@ export const Teams = () => {
           </section>
 
           {/* LISTA DE POKÉMONS CAPTURADOS DISPONÍVEIS */}
-          <section className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
-            <h2 className="text-lg font-bold mb-4 text-blue-400">💼 Seu Inventário / Armazenamento</h2>
+          <section style={{
+            backgroundColor: 'rgba(15, 23, 42, 0.4)',
+            border: '1px solid #1e293b',
+            borderRadius: '1rem',
+            padding: '1.5rem'
+          }}>
+            <h2 style={{
+              fontSize: '1.125rem',
+              lineHeight: '1.75rem',
+              fontWeight: 700,
+              marginBottom: '1rem',
+              color: '#000'
+            }}>Seus Pokémons</h2>
             {capturedPokemons.length === 0 ? (
-              <p className="text-sm text-slate-500 italic">Você não possui nenhum Pokémon capturado.</p>
+              <p style={{
+                fontSize: '0.875rem',
+                lineHeight: '1.25rem',
+                color: '#64748b',
+                fontStyle: 'italic'
+              }}>Você não possui nenhum Pokémon capturado.</p>
             ) : (
-              <div className="max-h-64 overflow-y-auto pr-2 flex flex-col gap-2 border border-slate-900 rounded-xl p-2 bg-slate-950/20">
+              <div style={{
+                maxHeight: '16rem',
+                overflowY: 'auto',
+                paddingRight: '0.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem',
+                border: '1px solid #0f172a',
+                borderRadius: '0.75rem',
+                padding: '0.5rem',
+                backgroundColor: 'rgba(2, 6, 23, 0.2)'
+              }}>
                 {capturedPokemons.map(cp => (
-                  <div key={cp.id} className="bg-slate-950/40 border border-slate-900 p-3 rounded-xl flex justify-between items-center text-sm">
+                  <div key={cp.id} style={{
+                    backgroundColor: 'rgba(2, 6, 23, 0.4)',
+                    border: '1px solid #0f172a',
+                    padding: '0.75rem',
+                    borderRadius: '0.75rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.25rem'
+                  }}>
                     <div>
-                      <span className="font-semibold">{cp.nickname || cp.pokemon.name}</span>
-                      <span className="text-xs text-slate-500 ml-2 font-mono">({cp.pokemon.name} Nv.{cp.level})</span>
+                      <span style={{
+                        color: '#ffffff',
+                        fontWeight: 400
+                      }}>{cp.nickname || cp.pokemon.name}</span>
+                      <span style={{
+                        fontSize: '0.75rem',
+                        lineHeight: '1rem',
+                        color: '#cfd1d4',
+                        marginLeft: '0.5rem',
+                        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+                      }}>({cp.pokemon.name} Nv.{cp.level})</span>
                     </div>
                     <button
                       onClick={() => handleAddMember(cp.id)}
-                      className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition-all"
+                      style={{
+                        backgroundColor: '#25eb32',
+                        color: '#ffffff',
+                        fontSize: '0.75rem',
+                        lineHeight: '1rem',
+                        paddingLeft: '0.75rem',
+                        paddingRight: '0.75rem',
+                        paddingTop: '0.375rem',
+                        paddingBottom: '0.375rem',
+                        borderRadius: '0.5rem',
+                        fontWeight: 500,
+                        transition: 'all 0.2s',
+                        cursor: 'pointer'
+                      }}
                     >
-                      ➕ Escalar no Grupo
+                      + Adicionar ao Grupo
                     </button>
                   </div>
                 ))}

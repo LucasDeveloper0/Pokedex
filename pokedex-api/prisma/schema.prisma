@@ -1,35 +1,32 @@
-datasource db {
-  provider  = "postgresql"
-}
-
 generator client {
   provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
 }
 
 model Trainer {
   id           String            @id @default(uuid())
   name         String
   email        String            @unique
-  password     String
   originRegion String
+  password     String
+  badges       Badge[]
   captured     CapturedPokemon[]
   teams        Team[]
-  badges       Badge[]
 }
 
 model Pokemon {
-  id           String            @id @default(uuid())
-  pokedexNum   Int               @unique
-  name         String
-  type1        String
-  type2        String?
-  
-  // Relação de Auto-referência (A Mágica!)
-  evolvesToId  String?           @unique
-  evolvesTo    Pokemon?          @relation("EvolutionChain", fields: [evolvesToId], references: [id])
-  evolvesFrom  Pokemon?          @relation("EvolutionChain")
-
-  instances    CapturedPokemon[]
+  id          String            @id @default(uuid())
+  pokedexNum  Int               @unique
+  name        String
+  type1       String
+  type2       String?
+  evolvesToId String?           @unique
+  instances   CapturedPokemon[]
+  evolvesTo   Pokemon?          @relation("EvolutionChain", fields: [evolvesToId], references: [id])
+  evolvesFrom Pokemon?          @relation("EvolutionChain")
 }
 
 model CapturedPokemon {
@@ -37,9 +34,9 @@ model CapturedPokemon {
   nickname   String?
   level      Int          @default(1)
   trainerId  String
-  trainer    Trainer      @relation(fields: [trainerId], references: [id])
   pokemonId  String
   pokemon    Pokemon      @relation(fields: [pokemonId], references: [id])
+  trainer    Trainer      @relation(fields: [trainerId], references: [id])
   teamMember TeamMember[]
 }
 
@@ -54,21 +51,23 @@ model Team {
 model TeamMember {
   id         String          @id @default(uuid())
   teamId     String
-  team       Team            @relation(fields: [teamId], references: [id])
   capturedId String
   captured   CapturedPokemon @relation(fields: [capturedId], references: [id])
+  team       Team            @relation(fields: [teamId], references: [id])
 }
 
 model Badge {
-  id        String  @id @default(uuid())
-  name      String
-  gym       String
-  trainerId String
-  trainer   Trainer @relation(fields: [trainerId], references: [id])
+  id          String      @id @default(uuid())
+  name        String
+  gym         String
+  trainerId   String
+  GlobalBadge GlobalBadge @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  trainer     Trainer     @relation(fields: [trainerId], references: [id])
 }
 
 model GlobalBadge {
-  id   String @id @default(uuid())
-  name String
-  gym  String
+  id    String @id @default(uuid())
+  name  String
+  gym   String
+  Badge Badge?
 }
